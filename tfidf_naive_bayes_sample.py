@@ -10,31 +10,32 @@ conf = SparkConf().setAppName("sample").setMaster("local")
 sc = SparkContext(conf=conf)
 
 sentence_data = sc.parallelize([
-    {"text": "Spark pyspark mllib", "label": 0.0},
-    {"text": "pyspark mllib", "label": 0.0},
-    {"text": "spark", "label": 0.0},
-    {"text": "Logistic regression", "label": 1.0},
-    {"text": "naive bayes", "label": 1.0},
-    {"text": "svm tfidf tf-idf", "label": 1.0}
+    {"text": "sapporo fukushima tokyo nagoya osaka kobe fukuoka", "label": 0.0},
+    {"text": "alabama alaska arizona california colorado connecticut", "label": 1.0},
+    {"text": "finland france germany greece hungary ireland", "label": 2.0},
 ])
 
 labels = sentence_data.map(lambda s: s["label"])
 texts = sentence_data.map(lambda s: s["text"].split(' '))
-htf = HashingTF()
-tf = htf.transform(texts).cache()
+htf = HashingTF(35)  # Warning!! default value is 2^20
+tf = htf.transform(texts)
 
 idf = IDF().fit(tf)
 tfidf = idf.transform(tf)
 
-training, test = labels.zip(tfidf).map(lambda x: LabeledPoint(x[0], x[1])).randomSplit([0.7, 0.3], seed=0)
+training = labels.zip(tfidf).map(lambda x: LabeledPoint(x[0], x[1]))
 model = NaiveBayes.train(training)
-predictionAndLabel = test.map(lambda p : (model.predict(p.features), p.label))
-accuracy = 1.0 * predictionAndLabel.filter(lambda (x, v): x == v).count() / test.count()
+
+test_tf = htf.transform(["sushi", "tenpura"])
+test = model.predict(test_tf)
 
 # debug
 p_tfidf = tfidf.collect()
 p_training = training.collect()
+p_test_p = test_p.collect()
 
 debug_message()
 print p_tfidf
 print p_training
+print p_test_p
+print test
