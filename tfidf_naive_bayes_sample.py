@@ -26,16 +26,14 @@ tfidf = idf.transform(tf)
 training = labels.zip(tfidf).map(lambda x: LabeledPoint(x[0], x[1]))
 model = NaiveBayes.train(training)
 
-test_tf = htf.transform(["sushi", "tenpura"])
+test_tf = htf.transform(["sapporo", "kobbe"])
 test = model.predict(test_tf)
 
 # debug
 p_tfidf = tfidf.collect()
 p_training = training.collect()
-p_test_p = test_p.collect()
 
 debug_message()
 print p_tfidf
 print p_training
-print p_test_p
 print test
