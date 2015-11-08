@@ -26,4 +26,4 @@ node = xdoc.getElementsByTagName("page")
 
 title_texts = [get_title_text(pages) for pages in node if has_title_text]
 for title_text in title_texts:
-    print "\"%s\"\t\"%s\"" % (title_text["title"].encode('utf-8'), title_text["text"].encode('utf-8'))
+    print "%s\t%s" % (title_text["title"].encode('utf-8'), title_text["text"].encode('utf-8'))
