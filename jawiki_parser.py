@@ -7,7 +7,7 @@ wikipediaのダンプをtsv形式で出力するスクリプト
 """
 def get_title_text(dom):
     title = dom.getElementsByTagName("title").item(0).childNodes[0].data
-    text  = dom.getElementsByTagName("text").item(0).childNodes[0].data
+    text  = dom.getElementsByTagName("text").item(0).childNodes[0].data.replace('\n', '')
     return {"title": title, "text": text}
 
 def has_title_text(dom):
