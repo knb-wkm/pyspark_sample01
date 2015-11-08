@@ -1,0 +1,30 @@
+<mediawiki>
+  <siteinfo></siteinfo>
+  <page>
+    <title>タイトル1</title>
+    <id></id>
+    <revision>
+      <timestamp></timestamp>
+      <contributor>
+	<username>ユーザ名1</username>
+	<id></id>
+      </contributor>
+      <comment>コメント1</comment>
+      <text xml:space="preserve">本文1</text>
+    </revision>  
+  </page>
+
+  <page>
+    <title>タイトル2</title>
+    <id></id>
+    <revision>
+      <timestamp></timestamp>
+      <contributor>
+	<username>ユーザ名2</username>
+	<id></id>
+      </contributor>
+      <comment>コメント2</comment>
+      <text>本文2</text>
+    </revision>  
+  </page>
+</mediawiki>
