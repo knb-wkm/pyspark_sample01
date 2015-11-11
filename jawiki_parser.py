@@ -4,6 +4,7 @@ import sys
 
 """
 wikipediaのダンプをtsv形式で出力するスクリプト
+$ python jawiki_parser.py xxxx.xml
 """
 def get_title_text(dom):
     title = dom.getElementsByTagName("title").item(0).childNodes[0].data
