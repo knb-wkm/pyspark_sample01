@@ -3,7 +3,7 @@ from pyspark import SparkContext, SparkConf
 from pyspark.mllib.feature import HashingTF
 from pyspark.mllib.classification import NaiveBayesModel
 import pickle
-import sys
+import os, sys
 
 """
 引数に解析させたいキーワードをスペース区切りにて入力
@@ -15,11 +15,12 @@ def debug_message():
 conf = SparkConf().setAppName("sample").setMaster("local")
 sc = SparkContext(conf=conf)
 
-f = open("model/texts.pick")
+path = os.path.abspath(os.path.dirname(__file__))
+f = open("%s/model/texts.pick" % path)
 texts = pickle.load(f)
 f.close()
 
-f = open("model/labels.pick")
+f = open("%s/model/labels.pick" % path)
 labels = pickle.load(f)
 f.close()
 
@@ -30,8 +31,8 @@ htf.transform(texts)
 words = sys.argv[1].split()
 test_tf = htf.transform(words)
 
-model = NaiveBayesModel.load(sc, "model")
+model = NaiveBayesModel.load(sc, "%s/model" % path)
 test = model.predict(test_tf)
 
-print test, labels[int(test)].encode('utf-8')
+print "label: %s" % labels[int(test)].encode('utf-8')
 
