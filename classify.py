@@ -22,7 +22,8 @@ texts = sc.parallelize(texts)
 htf = HashingTF(1000)  # Warning!! default value is 2^20
 htf.transform(texts)
 
-test_tf = htf.transform(["征夷"])
+words = "武将 戦国大名 三英傑 尾張 愛知 古渡 城主 嫡男 尾張 守護代 織田".split()
+test_tf = htf.transform(words)
 
 model = NaiveBayesModel.load(sc, "model")
 test = model.predict(test_tf)
