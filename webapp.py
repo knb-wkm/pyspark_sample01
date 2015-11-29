@@ -13,12 +13,16 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
+@app.route('/face')
+def face():
+    return render_template("face.html")
+
 @app.route('/classify', methods=['POST'])
 def classify():
     if request.method == 'POST':
         keywords = request.form["keywords"].encode('utf-8')
         spark_submit = "/usr/local/spark/bin/spark-submit"
-        classify_path = "dev/python/pyspark_sample01/classify.py"
+        classify_path = "repos/python/pyspark_sample_github/classify.py"
         cmd = 'ssh localhost "%s %s %s"' % (spark_submit, classify_path, keywords)
         result = commands.getoutput(cmd)
         p = re.compile('label: ')
