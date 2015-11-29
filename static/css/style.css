@@ -8,8 +8,8 @@
   height: 450px;
 }
 
-#result {
-  width: 200px;
-  height: 20px;
-  border: solid 1px;
+#message {
+  width: 400px;
+  height: 100px;
 }
+
