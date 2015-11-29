@@ -6,7 +6,8 @@ from pyspark.mllib.classification import NaiveBayes
 def debug_message():
     print "#" * 20 + " debug " + "#" * 20
 
-conf = SparkConf().setAppName("sample").setMaster("local")
+# conf = SparkConf().setAppName("sample").setMaster("local")
+conf = SparkConf().setAppName("sample").setMaster("spark://172.16.9.3:7077")
 sc = SparkContext(conf=conf)
 
 sentence_data = sc.parallelize([
@@ -17,7 +18,7 @@ sentence_data = sc.parallelize([
 
 labels = sentence_data.map(lambda s: s["label"])
 texts = sentence_data.map(lambda s: s["text"].split(' '))
-htf = HashingTF(35)  # Warning!! default value is 2^20
+htf = HashingTF(1000)  # Warning!! default value is 2^20
 tf = htf.transform(texts)
 
 idf = IDF().fit(tf)
