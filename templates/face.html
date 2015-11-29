@@ -8,18 +8,21 @@
     <script src="/static/js/face-change.js"></script>
 </head> 
 <body> 
-    <h1>SVG sample</h1>
-    <button id="to-positive">to positive</button>
-    <button id="to-normal">to normal</button>
-    <button id="to-negative">to negative</button>
-    <button id="to-think">to think</button>
-    <br><br>
+    <div id="wrapper">
+        <h2>表情の変化</h2>
+        <button id="to-normal">to normal</button>
+        <button id="to-think">to think</button>
+        <button id="to-positive">to positive</button>
+        <button id="to-negative">to negative</button>
 
-    <input type="text" id="keywords"></input>
-    <button id="submit">classify</button>
-    <p>result</p>
-    <div id="result"></div>
+        <h2>classifyテスト</h2>
+        <input type="text" id="keywords"></input>
+        <button id="submit">classify</button>
+        <p>result</p>
+        <div id="result"></div>
 
-    <div id="svgArea"></div>
+        <h2>愛くるしい顔</h2>
+        <div id="svgArea"></div>
+    </div>
 </body>
 </html>

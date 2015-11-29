@@ -1,5 +1,15 @@
+#wrapper {
+  width: 1024px;
+  padding: 30px;
+}
+
+#svgArea {
+  width: 480px;
+  height: 450px;
+}
+
 #result {
-  width: 300px;
-  height: 100px;
+  width: 200px;
+  height: 20px;
   border: solid 1px;
 }
