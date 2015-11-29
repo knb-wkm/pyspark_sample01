@@ -1,1 +1,5 @@
-body { background-color: #DDDDDD; }
+#result {
+  width: 300px;
+  height: 100px;
+  border: solid 1px;
+}
