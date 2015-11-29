@@ -5,6 +5,7 @@ from pyspark.mllib.regression import LabeledPoint
 from pyspark.mllib.classification import NaiveBayes
 import MeCab
 import pickle
+import os
 
 def debug_message():
     print "#" * 20 + " debug " + "#" * 20
@@ -18,14 +19,15 @@ def wakati(sentence):
             pass
         else:
             mean = words[1].split(",")[0]
-            if mean == '名詞' or mean == '形容詞':
-                wakati.append(words[0])
+            wakati.append(words[0])
+
     return wakati
 
 conf = SparkConf().setAppName("sample").setMaster("local")
 sc = SparkContext(conf=conf)
 
-sentence_data = sc.textFile("data/jawiki-latest-pages-articles.tsv")
+path = os.path.abspath(os.path.dirname(__file__))
+sentence_data = sc.textFile("%s/data/jawiki-latest-pages-articles.tsv" % path)
 labels = sentence_data.map(lambda s: s.split("\t")[0])
 texts = sentence_data.map(lambda s: s.split("\t")[1]).map(lambda s: wakati(s))
 
@@ -38,16 +40,17 @@ training = labels.zipWithIndex().map(lambda s: float(s[1])).zip(tfidf).map(lambd
 model = NaiveBayes.train(training)
 
 # save naive bayes model
-model.save(sc, "model")
+model.save(sc, ("%s/model" % path))
 
 # save labels
 labels = labels.collect()
-f = open("model/labels.pick", "w")
+f = open(("%s/model/labels.pick" % path), "w")
 pickle.dump(labels, f)
 f.close()
 
 # save texts
 texts = texts.collect()
-f = open("model/texts.pick", "w")
+f = open(("%s/model/texts.pick" % path), "w")
 pickle.dump(texts, f)
 f.close()
+
