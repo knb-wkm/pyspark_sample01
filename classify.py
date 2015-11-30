@@ -2,6 +2,7 @@
 from pyspark import SparkContext, SparkConf
 from pyspark.mllib.feature import HashingTF
 from pyspark.mllib.classification import NaiveBayesModel
+from pyspark.mllib.linalg import _convert_to_vector
 import pickle
 import os, sys
 
@@ -11,6 +12,13 @@ $ spark-submit classify.py "三英傑 一人 海道一"
 """
 def debug_message():
     print "#" * 20 + " debug " + "#" * 20
+
+def likelihood(self, test_tf):
+    x = _convert_to_vector(test_tf)
+    return self.pi + x.dot(self.theta.transpose())
+
+# mix-in
+NaiveBayesModel.likelihood = likelihood
 
 conf = SparkConf().setAppName("sample").setMaster("local")
 sc = SparkContext(conf=conf)
@@ -34,5 +42,7 @@ test_tf = htf.transform(words)
 model = NaiveBayesModel.load(sc, "%s/model" % path)
 test = model.predict(test_tf)
 
+likelihoods = model.likelihood(test_tf)
+print "likelihood: %s" % likelihoods[int(test)]
 print "label: %s" % labels[int(test)].encode('utf-8')
 
