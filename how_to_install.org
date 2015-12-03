@@ -10,6 +10,14 @@ Enter file contents here
   - make
   - make install
 
+* python2.7のパスを追加
+  - vim ~/.bashrc
+  - 以下を追加
+  
+  #+begin_src
+  export PATH=/usr/local/python:$PATH
+  #+end_src
+  
 * pipインストール
 
   - curl -kL https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python
