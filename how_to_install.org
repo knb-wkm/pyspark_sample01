@@ -1,0 +1,26 @@
+Enter file contents here
+
+* python2.7インストール
+
+  - yum install openssl-devel
+  - yum install zlib zlib-devel
+  - /home/wakayama/Python-2.7.10.tgz
+  - tar zxvf Python-xxx
+  - ./configure --prefix
+  - make
+  - make install
+
+* pipインストール
+
+  - curl -kL https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python
+
+* mecab-python
+
+  - yum install mecab mecab-devel mecab-ipadic
+  - yum install gcc-c++
+  - pip install mecab-python
+
+* numpy
+
+  - pip install numpy
+
