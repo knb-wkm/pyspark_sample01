@@ -41,3 +41,12 @@ Enter file contents here
 
   - pip install numpy
 
+* 動作確認
+
+  - 以下コマンドでエラーが無いことを確認
+  
+  #+begin_src
+  $ python
+  >>> import numpy
+  >>> import MeCab
+  #+end_src
