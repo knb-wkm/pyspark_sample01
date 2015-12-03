@@ -27,9 +27,13 @@ Enter file contents here
 
   - curl -kL https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python
 
+* mecab本体
+
+  -  rpm -ivh http://packages.groonga.org/centos/groonga-release-1.1.0-1.noarch.rpm
+  - yum install mecab mecab-devel mecab-ipadic
+  
 * mecab-python
 
-  - yum install mecab mecab-devel mecab-ipadic
   - yum install gcc-c++
   - pip install mecab-python
 
