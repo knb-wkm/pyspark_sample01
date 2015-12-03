@@ -18,6 +18,11 @@ Enter file contents here
   export PATH=/usr/local/python:$PATH
   #+end_src
   
+  - 以下コマンドを実行
+  #+begin_src
+  $ source .bashrc
+  #+end_src
+  
 * pipインストール
 
   - curl -kL https://raw.github.com/pypa/pip/master/contrib/get-pip.py | python
