@@ -3,6 +3,7 @@ from pyspark import SparkContext, SparkConf
 from pyspark.mllib.feature import HashingTF, IDF
 from pyspark.mllib.regression import LabeledPoint
 from pyspark.mllib.classification import NaiveBayes
+from multiprocessing import Pool ,cpu_count
 import MeCab
 import pickle
 import os
@@ -23,34 +24,45 @@ def wakati(sentence):
 
     return wakati
 
-conf = SparkConf().setAppName("sample").setMaster("local")
-sc = SparkContext(conf=conf)
 
-path = os.path.abspath(os.path.dirname(__file__))
-sentence_data = sc.textFile("%s/data/jawiki-latest-pages-articles.tsv" % path)
-labels = sentence_data.map(lambda s: s.split("\t")[0])
-texts = sentence_data.map(lambda s: s.split("\t")[1]).map(lambda s: wakati(s))
+if __name__ == '__main__':
 
-htf = HashingTF(1000)  # Warning!! default value is 2^20
-tf = htf.transform(texts)
-idf = IDF().fit(tf)
-tfidf = idf.transform(tf)
+    conf = SparkConf().setAppName("sample").setMaster("local")
+    sc = SparkContext(conf=conf)
 
-training = labels.zipWithIndex().map(lambda s: float(s[1])).zip(tfidf).map(lambda x: LabeledPoint(x[0], x[1]))
-model = NaiveBayes.train(training)
+    # processes = Number of Cores
+    pool = Pool(processes = 1)
 
-# save naive bayes model
-model.save(sc, ("%s/model" % path))
+    path = os.path.abspath(os.path.dirname(__file__))
+    sentence_data = sc.textFile("%s/data/jawiki-latest-pages-articles.tsv" % path)
+    labels = sentence_data.map(lambda s: s.split("\t")[0])
 
-# save labels
-labels = labels.collect()
-f = open(("%s/model/labels.pick" % path), "w")
-pickle.dump(labels, f)
-f.close()
+    multiproc_wakati = sentence_data.map(lambda s: s.split("\t")[1]).collect()
+    texts_temp = pool.map(wakati, multiproc_wakati)
+    pool.close()
+    pool.join()
+    texts = sc.parallelize(texts_temp)
 
-# save texts
-texts = texts.collect()
-f = open(("%s/model/texts.pick" % path), "w")
-pickle.dump(texts, f)
-f.close()
+    htf = HashingTF(1000)  # Warning!! default value is 2^20
+    tf = htf.transform(texts)
+    idf = IDF().fit(tf)
+    tfidf = idf.transform(tf)
+
+    training = labels.zipWithIndex().map(lambda s: float(s[1])).zip(tfidf).map(lambda x: LabeledPoint(x[0], x[1]))
+    model = NaiveBayes.train(training)
+
+    # save naive bayes model
+    model.save(sc, ("%s/model" % path))
+
+    # save labels
+    labels = labels.collect()
+    f = open(("%s/model/labels.pick" % path), "w")
+    pickle.dump(labels, f)
+    f.close()
+
+    # save texts
+    texts = texts.collect()
+    f = open(("%s/model/texts.pick" % path), "w")
+    pickle.dump(texts, f)
+    f.close()
 
