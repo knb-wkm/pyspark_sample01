@@ -27,17 +27,21 @@ def wakati(sentence):
 
 if __name__ == '__main__':
 
-    conf = SparkConf().setAppName("sample").setMaster("local")
+    conf = SparkConf().setAppName("sample").setMaster("local[*]")
     sc = SparkContext(conf=conf)
 
     # processes = Number of Cores
-    pool = Pool(processes = 1)
+    pool = Pool(processes = 4)
 
     path = os.path.abspath(os.path.dirname(__file__))
     sentence_data = sc.textFile("%s/data/jawiki-latest-pages-articles.tsv" % path)
+    sentence_data.persist(MEMORY_ONLY)
+
     labels = sentence_data.map(lambda s: s.split("\t")[0])
+    labels.persist(MEMORY_ONLY)
 
     multiproc_wakati = sentence_data.map(lambda s: s.split("\t")[1]).collect()
+    sentence_data.unpersist()
     texts_temp = pool.map(wakati, multiproc_wakati)
     pool.close()
     pool.join()
@@ -56,13 +60,12 @@ if __name__ == '__main__':
 
     # save labels
     labels = labels.collect()
-    f = open(("%s/model/labels.pick" % path), "w")
-    pickle.dump(labels, f)
-    f.close()
+    with open(("%s/model/labels.pick" % path), "w") as f:
+        pickle.dump(labels, f)
+    labels.unpersist()
 
     # save texts
     texts = texts.collect()
-    f = open(("%s/model/texts.pick" % path), "w")
-    pickle.dump(texts, f)
-    f.close()
+    with open(("%s/model/texts.pick" % path), "w") as f
+        pickle.dump(texts, f)
 
