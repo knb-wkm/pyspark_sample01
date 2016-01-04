@@ -35,10 +35,10 @@ if __name__ == '__main__':
 
     path = os.path.abspath(os.path.dirname(__file__))
     sentence_data = sc.textFile("%s/data/jawiki-latest-pages-articles.tsv" % path)
-    sentence_data.persist(MEMORY_ONLY)
+    sentence_data.persist()
 
     labels = sentence_data.map(lambda s: s.split("\t")[0])
-    labels.persist(MEMORY_ONLY)
+    labels.persist()
 
     multiproc_wakati = sentence_data.map(lambda s: s.split("\t")[1]).collect()
     sentence_data.unpersist()
@@ -66,6 +66,6 @@ if __name__ == '__main__':
 
     # save texts
     texts = texts.collect()
-    with open(("%s/model/texts.pick" % path), "w") as f
+    with open(("%s/model/texts.pick" % path), "w") as f:
         pickle.dump(texts, f)
 
