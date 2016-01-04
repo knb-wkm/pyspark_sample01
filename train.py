@@ -22,6 +22,7 @@ def wakati(sentence):
         else:
             mean = words[1].split(",")[0]
             wakati.append(words[0])
+#            yield words[0]
 
     return wakati
 
@@ -61,10 +62,11 @@ if __name__ == '__main__':
     model.save(sc, ("%s/model" % path))
 
     # save labels
-    labels = labels.collect()
-    with open(("%s/model/labels.pick" % path), "w") as f:
-        pickle.dump(labels, f)
+    labels_list = labels.collect()
     labels.unpersist()
+
+    with open(("%s/model/labels.pick" % path), "w") as f:
+        pickle.dump(labels_list, f)
 
     # save texts
     texts = texts.collect()
