@@ -3,6 +3,7 @@ from pyspark import SparkContext, SparkConf
 from pyspark.mllib.feature import HashingTF, IDF
 from pyspark.mllib.regression import LabeledPoint
 from pyspark.mllib.classification import NaiveBayes
+from pyspark import StorageLevel
 from multiprocessing import Pool ,cpu_count
 import MeCab
 import pickle
@@ -27,7 +28,8 @@ def wakati(sentence):
 
 if __name__ == '__main__':
 
-    conf = SparkConf().setAppName("sample").setMaster("local[*]")
+#    conf = SparkConf().setAppName("sample").setMaster("local[*]")
+    conf = SparkConf().setAppName("sample").setMaster("local")
     sc = SparkContext(conf=conf)
 
     # processes = Number of Cores
@@ -35,10 +37,10 @@ if __name__ == '__main__':
 
     path = os.path.abspath(os.path.dirname(__file__))
     sentence_data = sc.textFile("%s/data/jawiki-latest-pages-articles.tsv" % path)
-    sentence_data.persist()
+    sentence_data.persist(StorageLevel.MEMORY_ONLY)
 
     labels = sentence_data.map(lambda s: s.split("\t")[0])
-    labels.persist()
+    labels.persist(StorageLevel.MEMORY_ONLY)
 
     multiproc_wakati = sentence_data.map(lambda s: s.split("\t")[1]).collect()
     sentence_data.unpersist()
